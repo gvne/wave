@@ -1,10 +1,6 @@
-[![Build Status](https://travis-ci.org/audionamix/wave.svg?branch=master)](https://travis-ci.org/audionamix/wave)
-[![Build status](https://ci.appveyor.com/api/projects/status/0gja3xsvxa79kjm0?svg=true)](https://ci.appveyor.com/project/Audionamix/wave)
+# Libwave
 
-
-## Libwave
-A simple cross platform C++ interface for reading and writing WAVE files.
-
+A simple cross platform C++ interface for reading and writing WAVE files.  
 The WAVE file structure taken for reference is:
 
 ![alt text](http://i.stack.imgur.com/ITplE.gif)
@@ -13,7 +9,8 @@ see [this](http://stackoverflow.com/questions/13660777/c-reading-the-data-part-o
 
 
 ## Example
-~~~~~~~~~~cpp
+
+```cpp
 #include <iostream>
 #include <system_error>
 
@@ -53,4 +50,4 @@ int main() {
 
   return 0;
 }
-~~~~~~~~~~
+```

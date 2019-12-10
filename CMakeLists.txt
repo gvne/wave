@@ -9,23 +9,15 @@ option(wave_enable_tests "Build Unit tests" ON)
 
 # if cmake osx deployment target is defined, don't override the cxx standard
 if (NOT CMAKE_OSX_DEPLOYMENT_TARGET)
-  # use of c++14
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 14)  # use of c++14
 endif()
 set(CMAKE_DEBUG_POSTFIX d)  # add the d postfix to generated libraries
 
-if(wave_enable_tests)
-  set(gtest_install_dir ${CMAKE_BINARY_DIR}/gtest-install)
-  ExternalProject_Add(external_googletest
-    GIT_REPOSITORY "https://github.com/google/googletest.git"
-    GIT_TAG "718fd88d8f145c63b8cc134cf8fed92743cc112f"  # commit fixing visual studio 2017 errors
-    UPDATE_COMMAND ""
-    CMAKE_ARGS
-      "-Dgtest_force_shared_crt=ON"
-      "-DCMAKE_INSTALL_PREFIX=${gtest_install_dir}"
-  )
-  link_directories("${gtest_install_dir}/lib")
-  set(GTEST_ROOT "${gtest_install_dir}" CACHE PATH "Path to googletest")
+include_directories(src)
+add_subdirectory(src)
+
+if(${wave_enable_tests})
+  include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/add_googletest.cmake)
 
   # download test resource from https://archive.org/details/test_wav
   set(test_resource_path "${CMAKE_BINARY_DIR}/test_resource")
@@ -51,12 +43,10 @@ if(wave_enable_tests)
     8kcelp.wav
   )
   foreach(file ${test_file_list})
-    message(STATUS "downloading test file ${file}")
-    file(DOWNLOAD "http://www.nch.com.au/acm/${file}" "${test_resource_path}/${file}")
+    if(NOT EXISTS "${test_resource_path}/${file}")
+      message(STATUS "downloading test file ${file}")
+      file(DOWNLOAD "http://www.nch.com.au/acm/${file}" "${test_resource_path}/${file}")
+    endif()
   endforeach()
+  add_subdirectory(test)
 endif ()
-
-set(src "${CMAKE_SOURCE_DIR}/src")
-include_directories(${src})
-
-add_subdirectory("./src")
